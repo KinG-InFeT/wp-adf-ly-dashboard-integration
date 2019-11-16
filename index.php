@@ -38,7 +38,6 @@ class WPADFLYStats {
             'protocol' => trim(get_option(__PLUGIN_OPTIONS_PREFIX__ . '_protocol')) ?: 'http',
             'include_exclude_domains_choose' => get_option(__PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_choose') ?: 'exclude',
             'include_exclude_domains_value' => trim(get_option(__PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_value')),
-            'exclude_roles' => null,//get_option(__PLUGIN_OPTIONS_PREFIX__.'_exclude_roles')
             'widget_filter_month' => get_option(__PLUGIN_OPTIONS_PREFIX__ . '_widget_month_filter'),
         ];
 
@@ -112,18 +111,9 @@ class WPADFLYStats {
 
     public function gen_script() {
         if (get_option(__PLUGIN_OPTIONS_PREFIX__ . '_enabled')) {
-            $options = adfly_plugins_get_options();
-            global $current_user;
+            $options = $this->pluginOptions;
 
-            if ($options['exclude_roles']) {
-                foreach ($options['exclude_roles'] as $excludeRole) {
-                    if (in_array($excludeRole, $current_user->roles)) {
-                        return false;
-                    }
-                }
-            }
-
-            echo '
+            print '<!--wp-adf-ly-dashboard-integration-->
                 <script type="text/javascript">
                     var adfly_id = ' . json_encode($options['id']) . ';
                     var adfly_advert = ' . json_encode($options['type']) . ';
@@ -140,6 +130,7 @@ class WPADFLYStats {
                 </script>
                 <script defer src="http://cdn.adf.ly/js/link-converter.js"></script>
                 ' . ($options['website_entry_enabled'] ? '<script defer src="http://cdn.adf.ly/js/entry.js"></script>' : '') . ' 
+                <!-- [END] wp-adf-ly-dashboard-integration -->
             ';
         } else {
             return false;
@@ -207,7 +198,6 @@ class WPADFLYStats {
         register_setting(__PLUGIN_SETTINGS_GROUP__, __PLUGIN_OPTIONS_PREFIX__ . '_protocol');
         register_setting(__PLUGIN_SETTINGS_GROUP__, __PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_choose');
         register_setting(__PLUGIN_SETTINGS_GROUP__, __PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_value', [$this, 'includeExcludeDomainsValueValidate']);
-        register_setting(__PLUGIN_SETTINGS_GROUP__, __PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles');
     }
 
     public function dashboard_widget() {
@@ -348,18 +338,6 @@ class WPADFLYStats {
                             <td>
                                 <input type="checkbox" <?php echo get_option(__PLUGIN_OPTIONS_PREFIX__ . '_website_entry_enabled') ? 'checked="checked"' : '' ?> value="1" name="<?php print __PLUGIN_OPTIONS_PREFIX__; ?>_website_entry_enabled" />
                                 <p class="description">Check this option if you wish to earn money when a visitor simply enters your site.</p>
-                            </td>
-                        </tr>
-                        <tr valign="top">
-                            <td scope="row" class="left_adfly_bar">Exclude following user roles from displaying ads</td>
-                            <td>
-                                <select name="<?php print __PLUGIN_OPTIONS_PREFIX__; ?>_exclude_roles[]" multiple="multiple">
-                                    <option <?php echo get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles') && in_array('subscriber', get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles')) ? ' selected="selected" ' : '' ?> value="subscriber">Subscriber</option>
-                                    <option <?php echo get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles') && in_array('contributor', get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles')) ? ' selected="selected" ' : '' ?> value="contributor">Contributor</option>
-                                    <option <?php echo get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles') && in_array('author', get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles')) ? ' selected="selected" ' : '' ?> value="author">Author</option>
-                                    <option <?php echo get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles') && in_array('editor', get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles')) ? ' selected="selected" ' : '' ?> value="editor">Editor</option>
-                                    <option <?php echo get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles') && in_array('administrator', get_option(__PLUGIN_OPTIONS_PREFIX__ . '_exclude_roles')) ? ' selected="selected" ' : '' ?> value="administrator">Administrator</option>
-                                </select>
                             </td>
                         </tr>
                     </tbody>
