@@ -39,10 +39,14 @@ Setup an free account and get your credential from [Adf.ly Tools Page - API Docu
 
 1. Adf.ly API Documentations Page 
 2. Settings Page
-3. Dashboard Widget
+3. Widget
 
 
 == Changelog ==
+= 1.1.0 =
+* Bug fix
+* Add support for AMP page for WP
+* Add enable/disable support for AMP page
 
 = 1.0.0 =
 * Public release
