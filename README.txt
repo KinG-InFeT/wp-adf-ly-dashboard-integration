@@ -43,6 +43,10 @@ Setup an free account and get your credential from [Adf.ly Tools Page - API Docu
 
 
 == Changelog ==
+= 1.1.1 =
+* Update libs
+* Code updates
+
 = 1.1.0 =
 * Bug fix
 * Add support for AMP page for WP

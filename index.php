@@ -4,7 +4,7 @@
  * Plugin URI: https://wordpress-plugins.luongovincenzo.it/#wp-adf-ly-dashboard-integration
  * Description: This plugin allows you to configure Full Page Script, Website Entry Script, Pop-Ads tools and Dashboard widget for stats
  * Donate URI: https://wordpress-plugins.luongovincenzo.it/#donate
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Vincenzo Luongo
  * Author URI: https://wordpress-plugins.luongovincenzo.it/
  * License: GPLv2 or later
@@ -15,9 +15,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define("__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_DIR__", plugin_dir_path(__FILE__));
-define("__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__", 'wp_adf_ly_dashboard_integration_option');
-define("__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__", 'wp-adf-ly-dashboard-integration-settings-group');
+define("ADFLY_DASHBOARD_INTEGRATION_PLUGIN_DIR", plugin_dir_path(__FILE__));
+define("ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX", 'wp_adf_ly_dashboard_integration_option');
+define("ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP", 'wp-adf-ly-dashboard-integration-settings-group');
 
 class WPAdflyDashboardIntegration {
 
@@ -27,20 +27,20 @@ class WPAdflyDashboardIntegration {
     function __construct() {
         $this->pluginDetails = get_plugin_data(__FILE__);
         $this->pluginOptions = [
-            'enabled' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled'),
-            'enabled_stats' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled_stats'),
-            'enabled_amp' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled_amp'),
-            'id' => trim(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_id')) ?: '-1',
-            'popads_enabled' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_popads_enabled'),
-            'type' => trim(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_type')) ?: 'int',
-            'domain' => trim(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_domain')) ?: 'adf.ly',
-            'custom_domain' => trim(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_custom_domain')) ?: '',
-            'nofollow' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_nofollow'),
-            'website_entry_enabled' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_website_entry_enabled'),
-            'protocol' => trim(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_protocol')) ?: 'http',
-            'include_exclude_domains_choose' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_choose') ?: 'exclude',
-            'include_exclude_domains_value' => trim(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_value')),
-            'widget_filter_month' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_widget_month_filter'),
+            'enabled' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled'),
+            'enabled_stats' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled_stats'),
+            'enabled_amp' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled_amp'),
+            'id' => trim(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_id')) ?: '-1',
+            'popads_enabled' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_popads_enabled'),
+            'type' => trim(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_type')) ?: 'int',
+            'domain' => trim(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_domain')) ?: 'adf.ly',
+            'custom_domain' => trim(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_custom_domain')) ?: '',
+            'nofollow' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_nofollow'),
+            'website_entry_enabled' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_website_entry_enabled'),
+            'protocol' => trim(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_protocol')) ?: 'http',
+            'include_exclude_domains_choose' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_include_exclude_domains_choose') ?: 'exclude',
+            'include_exclude_domains_value' => trim(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_include_exclude_domains_value')),
+            'widget_filter_month' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_widget_month_filter'),
         ];
 
         add_action('wp_dashboard_setup', [$this, 'dashboard_widget']);
@@ -67,7 +67,7 @@ class WPAdflyDashboardIntegration {
 
 		$filter = $this->validFilter(@$_POST['filter_month']);
 
-		update_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_widget_month_filter', $filter);
+		update_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_widget_month_filter', $filter);
 
 		wp_die();
     }
@@ -126,7 +126,7 @@ class WPAdflyDashboardIntegration {
     }
 
     public function gen_script() {
-        if (get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled')) {
+        if (get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled')) {
             $options = $this->pluginOptions;
 
             print '<!--wp-adf-ly-dashboard-integration-->
@@ -184,7 +184,7 @@ class WPAdflyDashboardIntegration {
                 }
             }, $arr);
         } else {
-            add_settings_error(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_id', [$this, 'includeExcludeDomainsValueValidate'], 'You must specify at least one domain name to include/exclude.', 'error');
+            add_settings_error(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_id', [$this, 'includeExcludeDomainsValueValidate'], 'You must specify at least one domain name to include/exclude.', 'error');
         }
 
         return implode(',', $arr);
@@ -192,7 +192,7 @@ class WPAdflyDashboardIntegration {
 
     private function custom_domain_validate($value) {
         if (($value = trim($value)) && !$this->domainNameValidate($value)) {
-            add_settings_error(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_id', __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_custom_domain', $value . ' is not valid domain name.', 'error');
+            add_settings_error(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_id', ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_custom_domain', $value . ' is not valid domain name.', 'error');
             return false;
         }
 
@@ -200,21 +200,21 @@ class WPAdflyDashboardIntegration {
     }
 
     public function _registerOptions() {
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_id', [$this, 'optionIdValidate']);
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled_stats');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled_amp');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_public_api_key');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_secret_api_key');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_popads_enabled');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_type');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_domain');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_custom_domain', [$this, 'domainNameValidate']);
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_nofollow');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_website_entry_enabled');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_protocol');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_choose');
-        register_setting(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__, __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_value', [$this, 'includeExcludeDomainsValueValidate']);
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_id', [$this, 'optionIdValidate']);
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled_stats');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled_amp');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_public_api_key');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_secret_api_key');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_popads_enabled');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_type');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_domain');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_custom_domain', [$this, 'domainNameValidate']);
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_nofollow');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_website_entry_enabled');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_protocol');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_include_exclude_domains_choose');
+        register_setting(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP, ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_include_exclude_domains_value', [$this, 'includeExcludeDomainsValueValidate']);
     }
 
     public function dashboard_widget() {
@@ -237,26 +237,26 @@ class WPAdflyDashboardIntegration {
             <h2>WP Adf.ly integration Settings</h2>
 
             <form method="post" action="options.php">
-            <?php settings_fields(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__); ?>
-            <?php do_settings_sections(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP__); ?>
+            <?php settings_fields(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP); ?>
+            <?php do_settings_sections(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP); ?>
                 <table class="form-table">
                     <tbody>
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Integration Enabled</td>
-                            <td><input type="checkbox" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled') ? 'checked="checked"' : '' ?> value="1" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_enabled" /></td>
+                            <td><input type="checkbox" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled') ? 'checked="checked"' : '' ?> value="1" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_enabled" /></td>
                         </tr>
 
                         
 
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Enable AMPforWP Integration</td>
-                            <td><input type="checkbox" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled_amp') ? 'checked="checked"' : '' ?> value="1" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_enabled_amp" /></td>
+                            <td><input type="checkbox" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled_amp') ? 'checked="checked"' : '' ?> value="1" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_enabled_amp" /></td>
                         </tr>
 
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">AdFly User ID</td>
                             <td>
-                                <input type="text" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_id" value="<?php echo htmlspecialchars(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_id'), ENT_QUOTES) ?>" required />
+                                <input type="text" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_id" value="<?php echo htmlspecialchars(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_id'), ENT_QUOTES) ?>" required />
                                 <p class="description">
                                     Simply visit <a href="https://login.adf.ly/publisher/tools#tools-api" target="_blank">API Documentation</a> page.
                                     Read <strong>Your User ID</strong> number
@@ -266,12 +266,12 @@ class WPAdflyDashboardIntegration {
 
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Widget Stats Enabled</td>
-                            <td><input type="checkbox" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled_stats') ? 'checked="checked"' : '' ?> value="1" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_enabled_stats" /></td>
+                            <td><input type="checkbox" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled_stats') ? 'checked="checked"' : '' ?> value="1" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_enabled_stats" /></td>
                         </tr>
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Public API Key</td>
                             <td>
-                                <input type="text" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_public_api_key" value="<?php echo htmlspecialchars(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_public_api_key'), ENT_QUOTES) ?>" required />
+                                <input type="text" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_public_api_key" value="<?php echo htmlspecialchars(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_public_api_key'), ENT_QUOTES) ?>" required />
                                 <p class="description">
                                     Simply visit <a href="https://login.adf.ly/publisher/tools#tools-api" target="_blank">API Documentation</a> page.
                                     Read <strong>Your Public API Key</strong> number
@@ -281,7 +281,7 @@ class WPAdflyDashboardIntegration {
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Secret API Key</td>
                             <td>
-                                <input type="text" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_secret_api_key" value="<?php echo htmlspecialchars(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_secret_api_key'), ENT_QUOTES) ?>" required />
+                                <input type="text" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_secret_api_key" value="<?php echo htmlspecialchars(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_secret_api_key'), ENT_QUOTES) ?>" required />
                                 <p class="description">
                                     Simply visit <a href="https://login.adf.ly/publisher/tools#tools-api" target="_blank">API Documentation</a> page.
                                     Read <strong>Your Secret API Key</strong> number
@@ -291,22 +291,22 @@ class WPAdflyDashboardIntegration {
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Ad Type</td>
                             <td>
-                                <select name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_type">
-                                    <option value="int" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_type') == 'int' ? 'selected="selected"' : '' ?>>Interstitial</option>
-                                    <option value="banner" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_type') == 'banner' ? 'selected="selected"' : '' ?>>Banner</option>
+                                <select name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_type">
+                                    <option value="int" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_type') == 'int' ? 'selected="selected"' : '' ?>>Interstitial</option>
+                                    <option value="banner" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_type') == 'banner' ? 'selected="selected"' : '' ?>>Banner</option>
                                 </select>
                             </td>
                         </tr>
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">AdFly Domain</td>
                             <td>
-                                <select name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_domain">
-                                    <option value="adf.ly" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_domain') == 'adf.ly' ? 'selected="selected"' : '' ?>>adf.ly</option>
-                                    <option value="j.gs" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_domain') == 'j.gs' ? 'selected="selected"' : '' ?>>j.gs</option>
-                                    <option value="q.gs" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_domain') == 'q.gs' ? 'selected="selected"' : '' ?>>q.gs</option>
+                                <select name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_domain">
+                                    <option value="adf.ly" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_domain') == 'adf.ly' ? 'selected="selected"' : '' ?>>adf.ly</option>
+                                    <option value="j.gs" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_domain') == 'j.gs' ? 'selected="selected"' : '' ?>>j.gs</option>
+                                    <option value="q.gs" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_domain') == 'q.gs' ? 'selected="selected"' : '' ?>>q.gs</option>
                                 </select>
                                 &nbsp;or specify custom domain&nbsp;
-                                <input type="text" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_custom_domain" value="<?php echo htmlspecialchars(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_custom_domain'), ENT_QUOTES) ?>" />
+                                <input type="text" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_custom_domain" value="<?php echo htmlspecialchars(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_custom_domain'), ENT_QUOTES) ?>" />
                                 <p class="description">Custom domain can be used only with HTTP protocol.</p>
                             </td>
                         </tr>
@@ -315,16 +315,16 @@ class WPAdflyDashboardIntegration {
                             <td>
                                 <div>
                                     <label>
-                                        <input type="radio" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_include_exclude_domains_choose" value="include" <?php echo!get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_choose') || get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_choose') == 'include' ? 'checked="checked"' : '' ?> />
+                                        <input type="radio" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_include_exclude_domains_choose" value="include" <?php echo!get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_include_exclude_domains_choose') || get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_include_exclude_domains_choose') == 'include' ? 'checked="checked"' : '' ?> />
                                         Include
                                     </label>
                                     <label>
-                                        <input type="radio" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_include_exclude_domains_choose" value="exclude" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_choose') == 'exclude' ? 'checked="checked"' : '' ?> />
+                                        <input type="radio" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_include_exclude_domains_choose" value="exclude" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_include_exclude_domains_choose') == 'exclude' ? 'checked="checked"' : '' ?> />
                                         Exclude
                                     </label>
                                 </div>
                                 <div>
-                                    <textarea rows="4" style="width: 64%;" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_include_exclude_domains_value"><?php echo htmlspecialchars(trim(get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_include_exclude_domains_value')), ENT_QUOTES) ?></textarea>
+                                    <textarea rows="4" style="width: 64%;" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_include_exclude_domains_value"><?php echo htmlspecialchars(trim(get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_include_exclude_domains_value')), ENT_QUOTES) ?></textarea>
                                     <p class="description">
                                         Comma-separated list of domains. you can view a list of demo domains <a href="javascript:jQuery('#domains_demo_list').toggle();">here</a>
                                         <br />
@@ -337,23 +337,23 @@ class WPAdflyDashboardIntegration {
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">No Follow</td>
                             <td>
-                                <input type="checkbox" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_nofollow') ? 'checked="checked"' : '' ?> value="1" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_nofollow" />
+                                <input type="checkbox" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_nofollow') ? 'checked="checked"' : '' ?> value="1" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_nofollow" />
                                 <p class="description">Check this option if you wish links to stop outbound page equity.</p>
                             </td>
                         </tr>
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Protocol</td>
                             <td>
-                                <select name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_protocol">
-                                    <option value="https" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_protocol') == 'https' ? 'selected="selected"' : '' ?>>https</option>
-                                    <option value="http" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_protocol') == 'http' ? 'selected="selected"' : '' ?>>http</option>
+                                <select name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_protocol">
+                                    <option value="https" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_protocol') == 'https' ? 'selected="selected"' : '' ?>>https</option>
+                                    <option value="http" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_protocol') == 'http' ? 'selected="selected"' : '' ?>>http</option>
                                 </select>
                             </td>
                         </tr>
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Pop Ads Enabled</td>
                             <td>
-                                <input type="checkbox" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_popads_enabled') ? 'checked="checked"' : '' ?> value="1" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_popads_enabled" />
+                                <input type="checkbox" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_popads_enabled') ? 'checked="checked"' : '' ?> value="1" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_popads_enabled" />
                                 <p class="description">Apart from making money with your AdFly short links, you can also try a new additional method of advertising on AdFly - Pop Ads.</p>
                                 <p class="description">These popups can generate you extra revenue if you already use our 'Full Page Script' or 'Website Entry Script' on your website.</p>
                             </td>
@@ -361,7 +361,7 @@ class WPAdflyDashboardIntegration {
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Website Entry Script Enabled</td>
                             <td>
-                                <input type="checkbox" <?php echo get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_website_entry_enabled') ? 'checked="checked"' : '' ?> value="1" name="<?php print __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__; ?>_website_entry_enabled" />
+                                <input type="checkbox" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_website_entry_enabled') ? 'checked="checked"' : '' ?> value="1" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_website_entry_enabled" />
                                 <p class="description">Check this option if you wish to earn money when a visitor simply enters your site.</p>
                             </td>
                         </tr>
@@ -377,15 +377,14 @@ class WPAdflyDashboardIntegration {
     }
 
     public function adf_ly_dashboard_widget() {
-        require_once __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_DIR__ . 'libs/class-http.php';
-        require_once __WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_DIR__ . 'libs/class-adfly-client.php';
+        require_once ADFLY_DASHBOARD_INTEGRATION_PLUGIN_DIR . 'libs/class-api-client.php';
 
         $pluginSettings = [
-            'enabled_stats' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_enabled_stats'),
-            'user_id' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_id'),
-            'public_api_key' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_public_api_key'),
-            'secret_api_key' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_secret_api_key'),
-            'widget_filter_month' => get_option(__WP_ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX__ . '_widget_month_filter'),
+            'enabled_stats' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled_stats'),
+            'user_id' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_id'),
+            'public_api_key' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_public_api_key'),
+            'secret_api_key' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_secret_api_key'),
+            'widget_filter_month' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_widget_month_filter'),
         ];
 
         if (empty($pluginSettings['enabled_stats'])) {
@@ -398,7 +397,7 @@ class WPAdflyDashboardIntegration {
             return;
         }
 
-        $adflyAPI = new AdflyClient($pluginSettings['user_id'], $pluginSettings['public_api_key'], $pluginSettings['secret_api_key']);
+        $adflyAPIClient = new WPAdflyDashboardIntegrationAPIClient($pluginSettings['user_id'], $pluginSettings['public_api_key'], $pluginSettings['secret_api_key']);
 
         $dateFilter = null;
 
@@ -406,8 +405,8 @@ class WPAdflyDashboardIntegration {
         	$dateFilter = date('Y-m-d', $pluginSettings['widget_filter_month']);
         }
 
-        $stats = $adflyAPI->getPublisherStats($dateFilter);
-        $pushadStats = $adflyAPI->getPushadStats($dateFilter);
+        $stats = $adflyAPIClient->getPublisherStats($dateFilter);
+        $pushadStats = $adflyAPIClient->getPushadStats($dateFilter);
 
         $labels_X = [];
         $values_Y = [];
