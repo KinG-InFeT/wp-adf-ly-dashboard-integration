@@ -4,7 +4,7 @@
  * Plugin URI: https://wordpress-plugins.luongovincenzo.it/#wp-adf-ly-dashboard-integration
  * Description: This plugin allows you to configure Full Page Script, Website Entry Script, Pop-Ads tools and Dashboard widget for stats
  * Donate URI: https://wordpress-plugins.luongovincenzo.it/#donate
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: Vincenzo Luongo
  * Author URI: https://wordpress-plugins.luongovincenzo.it/
  * License: GPLv2 or later
@@ -103,7 +103,7 @@ class WPAdflyDashboardIntegration {
 	}
 
     public function add_plugin_actions($links) {
-        $links[] = '<a href="' . esc_url(get_admin_url(null, 'options-general.php?page=wp-adf-ly-dashboard-integration%2Findex.php')) . '">Settings</a>';
+        $links[] = '<a href="' . esc_url(get_admin_url(null, 'options-general.php?page=wp-adf-ly-dashboard-and-integration%2Findex.php')) . '">Settings</a>';
         $links[] = '<a href="https://wordpress-plugins.luongovincenzo.it/#donate" target="_blank">Donate</a>';
         return $links;
     }

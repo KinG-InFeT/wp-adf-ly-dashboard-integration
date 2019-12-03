@@ -41,8 +41,10 @@ Setup an free account and get your credential from [Adf.ly Tools Page - API Docu
 2. Settings Page
 3. Widget
 
-
 == Changelog ==
+= 1.1.2 =
+* Minor Bug Fix
+
 = 1.1.1 =
 * Update libs
 * Code updates
