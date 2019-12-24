@@ -473,7 +473,7 @@ class WPAdflyDashboardIntegration {
                         <div class="small-box small-md-6"><h3>Tot. Push Ad Earned</h3><p><?php print number_format($pushadStats['data']['totalAmount'], 2, '.', '.'); ?> $</p></div>
 
                         <div class="small-box small-md-6"><h3>Grand Total Visitors</h3><p><?php print number_format(($stats['data']['visitors'] + $pushadStats['data']['totalUsers']), 0, '.', '.'); ?> $</p></div>
-                        <div class="small-box small-md-6"><h3>Grand Earnings</h3><p><?php print number_format(($stats['data']['earned'] + $pushadStats['data']['totalAmount']), 2, '.', ','); ?> $</p></div>
+                        <div class="small-box small-md-6"><h3>Grand Earnings</h3><p><?php print number_format(($stats['data']['earned'] + $pushadStats['data']['totalAmount'] + $popAdStats['data']['totalAmount']), 2, '.', ','); ?> $</p></div>
                     </td>
                 </tr>
             </table>
