@@ -4,11 +4,11 @@
  * Plugin URI: https://wordpress-plugins.luongovincenzo.it/#wp-adf-ly-dashboard-integration
  * Description: This plugin allows you to configure Full Page Script, Website Entry Script, Pop-Ads tools and Dashboard widget for stats
  * Donate URI: https://wordpress-plugins.luongovincenzo.it/#donate
- * Version: 1.1.2
+ * Version: 1.2.0
  * Author: Vincenzo Luongo
  * Author URI: https://wordpress-plugins.luongovincenzo.it/
  * License: GPLv2 or later
- * Text Domain: wp-adf-ly-dashboard-integration
+ * Text Domain: wp-adf-ly-dashboard-and-integration
  */
 
 if (!defined('ABSPATH')) {
@@ -407,6 +407,8 @@ class WPAdflyDashboardIntegration {
 
         $stats = $adflyAPIClient->getPublisherStats($dateFilter);
         $pushadStats = $adflyAPIClient->getPushadStats($dateFilter);
+        $popAdStats = $adflyAPIClient->getPopAdStats($dateFilter);
+        
 
         $labels_X = [];
         $values_Y = [];
@@ -421,6 +423,10 @@ class WPAdflyDashboardIntegration {
 
         foreach ($pushadStats['data']['data'] as $stat) {
             $values_Y['pushAd'][] = $stat['amount'];
+        }
+
+        foreach ($popAdStats['data']['data'] as $stat) {
+            $values_Y['popAd'][] = $stat['amount'];
         }
         ?>
 
@@ -496,7 +502,7 @@ class WPAdflyDashboardIntegration {
                                 borderColor: COLORS['<?php print $key; ?>'],
                                 data: [<?php print implode(",", $values_Y[$key]); ?>],
                                 fill: false,
-                                hidden: <?php print ($key == 'earnings' || $key == 'cpm' || $key == 'pushAd') ? 'false' : 'true'; ?>,
+                                hidden: <?php print ($key == 'earnings' || $key == 'cpm' || $key == 'pushAd'  || $key == 'popAd') ? 'false' : 'true'; ?>,
                             },
         				<?php } ?>
                     ]

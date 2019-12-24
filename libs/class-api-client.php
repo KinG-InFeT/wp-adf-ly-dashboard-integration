@@ -92,4 +92,14 @@ class WPAdflyDashboardIntegrationAPIClient {
         return $this->doGet('/v1/pushadStats', $this->getParams($params, self::HMAC));
     }
 
+    public function getPopAdStats($start = null) {
+
+        $params = array();
+
+        if (!empty($start))
+            $params['start'] = $start;
+
+        return $this->doGet('/v1/popadStats', $this->getParams($params, self::HMAC));
+    }
+
 }

@@ -1,7 +1,7 @@
 === WP Adf.ly Dashboard and Integration ===
 Contributors: Vincenzo Luongo
 Donate link: https://wordpress-plugins.luongovincenzo.it/#donate
-Tags: adf.ly integration, adf.ly dashboard, adf.ly stats, adf.ly script massive, adfly
+Tags: adf.ly integration, adf.ly dashboard, adf.ly stats, adf.ly script massive, adfly, adf ly plugin
 Requires at least: 4.9
 Tested up to: 5.3
 Requires PHP: 5.6
@@ -42,6 +42,9 @@ Setup an free account and get your credential from [Adf.ly Tools Page - API Docu
 3. Widget
 
 == Changelog ==
+= 1.2.0 =
+* Add PopAd Stat into chart
+
 = 1.1.2 =
 * Minor Bug Fix
 
