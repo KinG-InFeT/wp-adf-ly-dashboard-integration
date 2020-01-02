@@ -3,7 +3,7 @@ Contributors: Vincenzo Luongo
 Donate link: https://wordpress-plugins.luongovincenzo.it/#donate
 Tags: adf.ly integration, adf.ly dashboard, adf.ly stats, adf.ly script massive, adfly, adf ly plugin
 Requires at least: 4.9
-Tested up to: 5.3
+Tested up to: 5.3.2
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -42,6 +42,12 @@ Setup an free account and get your credential from [Adf.ly Tools Page - API Docu
 3. Widget
 
 == Changelog ==
+= 1.3.0 =
+* Add PopAd Stat total box
+
+= 1.2.1 =
+* Update donate link
+
 = 1.2.0 =
 * Add PopAd Stat into chart
 

@@ -3,8 +3,8 @@
  * Plugin Name: WP Adf.ly Dashboard and Integration
  * Plugin URI: https://wordpress-plugins.luongovincenzo.it/#wp-adf-ly-dashboard-integration
  * Description: This plugin allows you to configure Full Page Script, Website Entry Script, Pop-Ads tools and Dashboard widget for stats
- * Donate URI: https://wordpress-plugins.luongovincenzo.it/#donate
- * Version: 1.2.0
+ * Donate URI: https://donate.luongovincenzo.it/
+ * Version: 1.3.0
  * Author: Vincenzo Luongo
  * Author URI: https://wordpress-plugins.luongovincenzo.it/
  * License: GPLv2 or later
@@ -469,8 +469,9 @@ class WPAdflyDashboardIntegration {
                         <div class="small-box"><h3>PushAd Tot. Visitors</h3><p><?php print number_format($pushadStats['data']['totalUsers'], 0, '.', '.'); ?></p></div>
                         <div class="small-box"><h3>AVG CPM</h3><p><?php print number_format($stats['data']['avgCpm'], 4); ?></p></div>
                         
-                        <div class="small-box small-md-6"><h3>Tot. Ads Earned</h3><p><?php print number_format($stats['data']['earned'], 2, '.', '.'); ?> $</p></div>
-                        <div class="small-box small-md-6"><h3>Tot. Push Ad Earned</h3><p><?php print number_format($pushadStats['data']['totalAmount'], 2, '.', '.'); ?> $</p></div>
+                        <div class="small-box"><h3>Tot. Ads Earned</h3><p><?php print number_format($stats['data']['earned'], 2, '.', '.'); ?> $</p></div>
+                        <div class="small-box"><h3>Tot. Push Ad Earned</h3><p><?php print number_format($pushadStats['data']['totalAmount'], 2, '.', '.'); ?> $</p></div>
+                        <div class="small-box"><h3>Tot. Pop Ad Earned</h3><p><?php print number_format($popAdStats['data']['totalAmount'], 2, '.', '.'); ?> $</p></div>
 
                         <div class="small-box small-md-6"><h3>Grand Total Visitors</h3><p><?php print number_format(($stats['data']['visitors'] + $pushadStats['data']['totalUsers']), 0, '.', '.'); ?> $</p></div>
                         <div class="small-box small-md-6"><h3>Grand Earnings</h3><p><?php print number_format(($stats['data']['earned'] + $pushadStats['data']['totalAmount'] + $popAdStats['data']['totalAmount']), 2, '.', ','); ?> $</p></div>
