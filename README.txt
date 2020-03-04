@@ -42,6 +42,9 @@ Setup an free account and get your credential from [Adf.ly Tools Page - API Docu
 3. Widget
 
 == Changelog ==
+= 1.3.1 =
+* Bug Fix
+
 = 1.3.0 =
 * Add PopAd Stat total box
 

@@ -4,13 +4,12 @@
  * Plugin URI: https://wordpress-plugins.luongovincenzo.it/#wp-adf-ly-dashboard-integration
  * Description: This plugin allows you to configure Full Page Script, Website Entry Script, Pop-Ads tools and Dashboard widget for stats
  * Donate URI: https://donate.luongovincenzo.it/
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: Vincenzo Luongo
  * Author URI: https://wordpress-plugins.luongovincenzo.it/
  * License: GPLv2 or later
  * Text Domain: wp-adf-ly-dashboard-and-integration
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -25,6 +24,11 @@ class WPAdflyDashboardIntegration {
     protected $pluginOptions = [];
 
     function __construct() {
+
+        if (!function_exists('get_plugin_data')) {
+            require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        }
+
         $this->pluginDetails = get_plugin_data(__FILE__);
         $this->pluginOptions = [
             'enabled' => get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled'),
@@ -49,58 +53,54 @@ class WPAdflyDashboardIntegration {
         add_action('admin_menu', [$this, 'create_admin_menu']);
         add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'add_plugin_actions']);
 
-        add_action( 'admin_enqueue_scripts', [$this, 'widget_dashboard_ajax_script']);
-		add_action( 'wp_ajax_wp_adfly_update_month_filter', [$this, 'wp_adfly_update_month_filter_action']);
+        add_action('admin_enqueue_scripts', [$this, 'widget_dashboard_ajax_script']);
+        add_action('wp_ajax_wp_adfly_update_month_filter', [$this, 'wp_adfly_update_month_filter_action']);
 
         /*
          * Support for AMPforWP - ampforwp.com
          */
 
-        if(in_array('accelerated-mobile-pages/accelerated-moblie-pages.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-            if($this->pluginOptions['enabled_amp']) {
-                add_action( 'amp_post_template_head', [$this, 'gen_script']);
+        if (in_array('accelerated-mobile-pages/accelerated-moblie-pages.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+            if ($this->pluginOptions['enabled_amp']) {
+                add_action('amp_post_template_head', [$this, 'gen_script']);
             }
         }
     }
 
     public function wp_adfly_update_month_filter_action() {
 
-		$filter = $this->validFilter(@$_POST['filter_month']);
+        $filter = $this->validFilter(@$_POST['filter_month']);
 
-		update_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_widget_month_filter', $filter);
+        update_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_widget_month_filter', $filter);
 
-		wp_die();
+        wp_die();
     }
 
     private function validFilter($timestamp) {
-	    if (!empty($timestamp)
-            && ((string) (int) $timestamp === $timestamp) 
-	        && ($timestamp <= PHP_INT_MAX)
-	        && ($timestamp >= ~PHP_INT_MAX)
-            && is_numeric($timestamp)) {
+        if (!empty($timestamp) && ((string) (int) $timestamp === $timestamp) && ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX) && is_numeric($timestamp)) {
 
             return $timestamp;
-        }else{
+        } else {
             return null;
         }
-	}
+    }
 
-    public function widget_dashboard_ajax_script($hook) { 
+    public function widget_dashboard_ajax_script($hook) {
 
-    	if( 'index.php' != $hook ) {
-			// Only applies to dashboard panel
-			return;
-	    }
+        if ('index.php' != $hook) {
+            // Only applies to dashboard panel
+            return;
+        }
 
 
         wp_enqueue_style('adf-ly-dashboard-widget-admin-theme', plugins_url('/css/style.css', __FILE__), $this->pluginDetails['Version']);
 
-        wp_enqueue_script('chartjs', plugins_url( '/js/chartjs.js', __FILE__ ), [ 'jquery' ], $this->pluginDetails['Version']);
+        wp_enqueue_script('chartjs', plugins_url('/js/chartjs.js', __FILE__), ['jquery'], $this->pluginDetails['Version']);
 
-	    wp_enqueue_script( 'ajax-script', plugins_url( '/js/main.js', __FILE__ ), ['jquery'], $this->pluginDetails['Version']);
+        wp_enqueue_script('ajax-script', plugins_url('/js/main.js', __FILE__), ['jquery'], $this->pluginDetails['Version']);
 
-		wp_localize_script( 'ajax-script', 'ajax_object', ['ajax_url' => admin_url( 'admin-ajax.php' ), 'filter_month' => null ] );
-	}
+        wp_localize_script('ajax-script', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php'), 'filter_month' => null]);
+    }
 
     public function add_plugin_actions($links) {
         $links[] = '<a href="' . esc_url(get_admin_url(null, 'options-general.php?page=wp-adf-ly-dashboard-and-integration%2Findex.php')) . '">Settings</a>';
@@ -234,11 +234,11 @@ class WPAdflyDashboardIntegration {
             }
         </style>
         <div class="wrap">
-            <h2>WP Adf.ly integration Settings</h2>
+            <h2>WP Adf.ly Integration Settings</h2>
 
             <form method="post" action="options.php">
-            <?php settings_fields(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP); ?>
-            <?php do_settings_sections(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP); ?>
+                <?php settings_fields(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP); ?>
+                <?php do_settings_sections(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_SETTINGS_GROUP); ?>
                 <table class="form-table">
                     <tbody>
                         <tr valign="top">
@@ -246,7 +246,7 @@ class WPAdflyDashboardIntegration {
                             <td><input type="checkbox" <?php echo get_option(ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX . '_enabled') ? 'checked="checked"' : '' ?> value="1" name="<?php print ADFLY_DASHBOARD_INTEGRATION_PLUGIN_OPTIONS_PREFIX; ?>_enabled" /></td>
                         </tr>
 
-                        
+
 
                         <tr valign="top">
                             <td scope="row" class="left_adfly_bar">Enable AMPforWP Integration</td>
@@ -373,7 +373,7 @@ class WPAdflyDashboardIntegration {
                 </p>
             </form>
         </div>
-    <?php
+        <?php
     }
 
     public function adf_ly_dashboard_widget() {
@@ -388,7 +388,7 @@ class WPAdflyDashboardIntegration {
         ];
 
         if (empty($pluginSettings['enabled_stats'])) {
-            print "<h3>Plugin not active, please enter into settings page and enable it";
+            print '<h3>Plugin not active, please enter into <a href="' . esc_url(get_admin_url(null, 'options-general.php?page=wp-adf-ly-dashboard-and-integration%2Findex.php')) . '">Setting page</a> and enable it';
             return;
         }
 
@@ -401,14 +401,14 @@ class WPAdflyDashboardIntegration {
 
         $dateFilter = null;
 
-        if($pluginSettings['widget_filter_month']) {
-        	$dateFilter = date('Y-m-d', $pluginSettings['widget_filter_month']);
+        if ($pluginSettings['widget_filter_month']) {
+            $dateFilter = date('Y-m-d', $pluginSettings['widget_filter_month']);
         }
 
         $stats = $adflyAPIClient->getPublisherStats($dateFilter);
         $pushadStats = $adflyAPIClient->getPushadStats($dateFilter);
         $popAdStats = $adflyAPIClient->getPopAdStats($dateFilter);
-        
+
 
         $labels_X = [];
         $values_Y = [];
@@ -444,15 +444,15 @@ class WPAdflyDashboardIntegration {
                             <?php
                             for ($i = 0; $i <= 12; $i++) {
 
-                            	$selectValue = date('F Y', strtotime("-$i month"));
+                                $selectValue = date('F Y', strtotime("-$i month"));
 
-                            	$selectedDom = '';
-								if( 
-									(!$dateFilter && date('Y-m', strtotime($selectValue)) == date('Y-m')) || 
-									($dateFilter && date('Y-m', strtotime($dateFilter)) == date('Y-m', strtotime($selectValue)) ) 
-								) {
-									$selectedDom = ' selected ';
-								}
+                                $selectedDom = '';
+                                if (
+                                        (!$dateFilter && date('Y-m', strtotime($selectValue)) == date('Y-m')) ||
+                                        ($dateFilter && date('Y-m', strtotime($dateFilter)) == date('Y-m', strtotime($selectValue)) )
+                                ) {
+                                    $selectedDom = ' selected ';
+                                }
 
                                 print '<option value="' . strtotime($selectValue) . '" ' . $selectedDom . ' >' . $selectValue . '</option>' . PHP_EOL;
                             }
@@ -468,12 +468,12 @@ class WPAdflyDashboardIntegration {
                         <div class="small-box"><h3>Ads Tot. Visitors</h3><p><?php print number_format($stats['data']['visitors'], 0, '.', '.'); ?></p></div>
                         <div class="small-box"><h3>PushAd Tot. Visitors</h3><p><?php print number_format($pushadStats['data']['totalUsers'], 0, '.', '.'); ?></p></div>
                         <div class="small-box"><h3>AVG CPM</h3><p><?php print number_format($stats['data']['avgCpm'], 4); ?></p></div>
-                        
+
                         <div class="small-box"><h3>Tot. Ads Earned</h3><p><?php print number_format($stats['data']['earned'], 2, '.', '.'); ?> $</p></div>
                         <div class="small-box"><h3>Tot. Push Ad Earned</h3><p><?php print number_format($pushadStats['data']['totalAmount'], 2, '.', '.'); ?> $</p></div>
                         <div class="small-box"><h3>Tot. Pop Ad Earned</h3><p><?php print number_format($popAdStats['data']['totalAmount'], 2, '.', '.'); ?> $</p></div>
 
-                        <div class="small-box small-md-6"><h3>Grand Total Visitors</h3><p><?php print number_format(($stats['data']['visitors'] + $pushadStats['data']['totalUsers']), 0, '.', '.'); ?> $</p></div>
+                        <div class="small-box small-md-6"><h3>Grand Total Visitors</h3><p><?php print number_format(($stats['data']['visitors'] + $pushadStats['data']['totalUsers']), 0, '.', '.'); ?></p></div>
                         <div class="small-box small-md-6"><h3>Grand Earnings</h3><p><?php print number_format(($stats['data']['earned'] + $pushadStats['data']['totalAmount'] + $popAdStats['data']['totalAmount']), 2, '.', ','); ?> $</p></div>
                     </td>
                 </tr>
@@ -496,16 +496,16 @@ class WPAdflyDashboardIntegration {
                 data: {
                     labels: LABELS_X,
                     datasets: [
-        				<?php foreach ($values_Y as $key => $value) { ?>
+                        <?php foreach ($values_Y as $key => $value) { ?>
                             {
                                 label: '<?php print strtoupper($key); ?>',
                                 backgroundColor: COLORS['<?php print $key; ?>'],
                                 borderColor: COLORS['<?php print $key; ?>'],
                                 data: [<?php print implode(",", $values_Y[$key]); ?>],
                                 fill: false,
-                                hidden: <?php print ($key == 'earnings' || $key == 'cpm' || $key == 'pushAd'  || $key == 'popAd') ? 'false' : 'true'; ?>,
+                                hidden: <?php print ($key == 'earnings' || $key == 'cpm' || $key == 'pushAd' || $key == 'popAd') ? 'false' : 'true'; ?>,
                             },
-        				<?php } ?>
+                        <?php } ?>
                     ]
                 },
                 options: {
@@ -545,7 +545,6 @@ class WPAdflyDashboardIntegration {
             window.onload = function () {
                 var ctx = document.getElementById('adflyStatsCanvas').getContext('2d');
                 var adflyCanvasChart = new Chart(ctx, config);
-                //adflyCanvasChart.height = 300;
             };
 
         </script>
