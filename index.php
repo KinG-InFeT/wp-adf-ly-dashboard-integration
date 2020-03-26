@@ -4,7 +4,7 @@
  * Plugin URI: https://wordpress-plugins.luongovincenzo.it/#wp-adf-ly-dashboard-integration
  * Description: This plugin allows you to configure Full Page Script, Website Entry Script, Pop-Ads tools and Dashboard widget for stats
  * Donate URI: https://donate.luongovincenzo.it/
- * Version: 1.3.1
+ * Version: 1.3.2
  * Author: Vincenzo Luongo
  * Author URI: https://wordpress-plugins.luongovincenzo.it/
  * License: GPLv2 or later
@@ -482,25 +482,25 @@ class WPAdflyDashboardIntegration {
 
         <script>
 
-            var LABELS_X = [<?php print implode(",", $labels_X); ?>];
+            var ADFLY_LABELS_X = [<?php print implode(",", $labels_X); ?>];
 
-            var COLORS = [];
-            COLORS['earnings'] = 'rgba(105,204,79,1)';
-            COLORS['uniques'] = 'rgba(163,63,84, 1)';
-            COLORS['views'] = 'rgba(103,46,223, 1)';
-            COLORS['cpm'] = 'rgba(53,70,94, 1)';
-            COLORS['pushAd'] = 'rgba(77,200,240, 1)';
+            var ADFLY_COLORS = [];
+            ADFLY_COLORS['earnings'] = 'rgba(105,204,79,1)';
+            ADFLY_COLORS['uniques'] = 'rgba(163,63,84, 1)';
+            ADFLY_COLORS['views'] = 'rgba(103,46,223, 1)';
+            ADFLY_COLORS['cpm'] = 'rgba(53,70,94, 1)';
+            ADFLY_COLORS['pushAd'] = 'rgba(77,200,240, 1)';
 
-            var config = {
+            var adflyChartconfig = {
                 type: 'line',
                 data: {
-                    labels: LABELS_X,
+                    labels: ADFLY_LABELS_X,
                     datasets: [
                         <?php foreach ($values_Y as $key => $value) { ?>
                             {
                                 label: '<?php print strtoupper($key); ?>',
-                                backgroundColor: COLORS['<?php print $key; ?>'],
-                                borderColor: COLORS['<?php print $key; ?>'],
+                                backgroundColor: ADFLY_COLORS['<?php print $key; ?>'],
+                                borderColor: ADFLY_COLORS['<?php print $key; ?>'],
                                 data: [<?php print implode(",", $values_Y[$key]); ?>],
                                 fill: false,
                                 hidden: <?php print ($key == 'earnings' || $key == 'cpm' || $key == 'pushAd' || $key == 'popAd') ? 'false' : 'true'; ?>,
@@ -542,10 +542,10 @@ class WPAdflyDashboardIntegration {
                 }
             };
 
-            window.onload = function () {
-                var ctx = document.getElementById('adflyStatsCanvas').getContext('2d');
-                var adflyCanvasChart = new Chart(ctx, config);
-            };
+            document.addEventListener("DOMContentLoaded", function () {
+                var adflyCtx = document.getElementById('adflyStatsCanvas').getContext('2d');
+                var adflyCanvasChart = new Chart(adflyCtx, adflyChartconfig);
+            });
 
         </script>
         <?php
