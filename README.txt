@@ -1,8 +1,8 @@
 === WP Adf.ly Dashboard and Integration ===
 Contributors: Vincenzo Luongo
 Tags: adf.ly integration, adf.ly dashboard, adf.ly stats, adf.ly script massive, adfly, adf ly plugin
-Requires at least: 4.9
-Tested up to: 5.6
+Requires at least: 5.0
+Tested up to: 5.8
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -41,6 +41,12 @@ Setup an free account and get your credential from [Adf.ly Tools Page - API Docu
 3. Widget
 
 == Changelog ==
+
+= 1.3.5 =
+* Support for Wordpress 5.8 added
+
+= 1.3.4 =
+* Support for Wordpress 5.7 added
 
 = 1.3.3 =
 * Added support for Wordpress 5.6
