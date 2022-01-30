@@ -3,13 +3,12 @@
  * Plugin Name: WP Adf.ly Dashboard and Integration
  * Plugin URI: https://wordpress-plugins.luongovincenzo.it/#wp-adf-ly-dashboard-integration
  * Description: This plugin allows you to configure Full Page Script, Website Entry Script, Pop-Ads tools and Dashboard widget for stats
- * Version: 1.3.5
+ * Version: 1.3.6
  * Author: Vincenzo Luongo
  * Author URI: https://www.luongovincenzo.it/
  * License: GPLv2 or later
  * Text Domain: wp-adf-ly-dashboard-and-integration
  */
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -116,7 +115,7 @@ class WPAdflyDashboardIntegration {
             $script .= 'exclude_domains = [';
         }
         if (trim($options['include_exclude_domains_value'])) {
-            $script .= implode(', ', array_map(function($x) {
+            $script .= implode(', ', array_map(function ($x) {
                         return json_encode(trim($x));
                     }, explode(',', trim($options['include_exclude_domains_value']))));
         }
@@ -172,13 +171,13 @@ class WPAdflyDashboardIntegration {
     }
 
     private function includeExcludeDomainsValueValidate($value) {
-        $arr = array_filter(array_map(function($x) {
+        $arr = array_filter(array_map(function ($x) {
                     return trim($x);
-                }, explode(',', trim($value))), function($x) {
-            return $x ? true : false;
-        });
+                }, explode(',', trim($value))), function ($x) {
+                    return $x ? true : false;
+                });
         if (count($arr)) {
-            array_map(function($x) {
+            array_map(function ($x) {
                 if (!$this->domainNameValidate($x)) {
                     //add_settings_error('adfly_plugins_option_id', 'adfly_plugins_option_include_exclude_domains_value', $x . ' is not valid domain name.', 'error');
                 }
@@ -409,7 +408,6 @@ class WPAdflyDashboardIntegration {
         $pushadStats = $adflyAPIClient->getPushadStats($dateFilter);
         $popAdStats = $adflyAPIClient->getPopAdStats($dateFilter);
 
-
         $labels_X = [];
         $values_Y = [];
 
@@ -438,25 +436,25 @@ class WPAdflyDashboardIntegration {
 
             <table style="width:100%;">
                 <tr>
-                   <td style="width:30%;">Filter Month:</td>
-                   <td style="width:70%; font-weight: bold;">
+                                   <td style="width:30%;">Filter Month:</td>
+                                   <td style="width:70%; font-weight: bold;">
                         <select id="adf_ly_dashboard_widget_filter_month" >
-                            <?php
-                            for ($i = 0; $i <= 12; $i++) {
+        <?php
+        for ($i = 0; $i <= 12; $i++) {
 
-                                $selectValue = date('F Y', strtotime("-$i month"));
+            $selectValue = date('F Y', strtotime("-$i month"));
 
-                                $selectedDom = '';
-                                if (
-                                        (!$dateFilter && date('Y-m', strtotime($selectValue)) == date('Y-m')) ||
-                                        ($dateFilter && date('Y-m', strtotime($dateFilter)) == date('Y-m', strtotime($selectValue)) )
-                                ) {
-                                    $selectedDom = ' selected ';
-                                }
+            $selectedDom = '';
+            if (
+                    (!$dateFilter && date('Y-m', strtotime($selectValue)) == date('Y-m')) ||
+                    ($dateFilter && date('Y-m', strtotime($dateFilter)) == date('Y-m', strtotime($selectValue)) )
+            ) {
+                $selectedDom = ' selected ';
+            }
 
-                                print '<option value="' . strtotime($selectValue) . '" ' . $selectedDom . ' >' . $selectValue . '</option>' . PHP_EOL;
-                            }
-                            ?>
+            print '<option value="' . strtotime($selectValue) . '" ' . $selectedDom . ' >' . $selectValue . '</option>' . PHP_EOL;
+        }
+        ?>
                         </select>
                     </td>
                 </tr>
@@ -496,7 +494,7 @@ class WPAdflyDashboardIntegration {
                 data: {
                     labels: ADFLY_LABELS_X,
                     datasets: [
-                        <?php foreach ($values_Y as $key => $value) { ?>
+        <?php foreach ($values_Y as $key => $value) { ?>
                             {
                                 label: '<?php print strtoupper($key); ?>',
                                 backgroundColor: ADFLY_COLORS['<?php print $key; ?>'],
@@ -505,7 +503,7 @@ class WPAdflyDashboardIntegration {
                                 fill: false,
                                 hidden: <?php print ($key == 'earnings' || $key == 'cpm' || $key == 'pushAd' || $key == 'popAd') ? 'false' : 'true'; ?>,
                             },
-                        <?php } ?>
+        <?php } ?>
                     ]
                 },
                 options: {
